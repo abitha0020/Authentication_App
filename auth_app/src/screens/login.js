@@ -25,7 +25,6 @@ export default function Login({ navigation }) {
           <Text style={styles.title}>Log In</Text>
       
           <SafeAreaView style={styles.form}>
-            {/* Input Fields */}
             <TextInput
               style={styles.input}
               placeholder="Enter email"
@@ -46,13 +45,11 @@ export default function Login({ navigation }) {
               value={password}
               onChangeText={(text) => setPassword(text)}
             />
-      
-            {/* Login Button */}
+
             <TouchableOpacity style={styles.button} onPress={onHandleLogin}>
               <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>Log In</Text>
             </TouchableOpacity>
       
-            {/* Navigation to Signup Screen */}
             <View
               style={{
                 marginTop: 20,
@@ -69,7 +66,6 @@ export default function Login({ navigation }) {
               </TouchableOpacity>
             </View>
           </SafeAreaView>
-          {/* StatusBar */}
           <StatusBar barStyle="light-content" />
         </View>
       );
