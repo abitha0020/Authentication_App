@@ -9,6 +9,7 @@ import { AuthenticatedUserContext } from "./src/contexts";
 import { StatusBar } from "react-native";
 import Signup from './src/screens/signup';
 import Login from "./src/screens/login";
+import Home from './src/screens/home';
 import { Platform } from 'react-native';
 
 const AuthenticatedUserProvider = ({ children }) => {
@@ -22,17 +23,14 @@ const AuthenticatedUserProvider = ({ children }) => {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Login />
-    </NavigationContainer>
+    <AuthenticatedUserProvider>
+      <RootComponent />
+    </AuthenticatedUserProvider>
   );
 }
 
 const RootComponent = () => {
-  // State to track loading status
   const [isLoading, setIsLoading] = useState(true);
-
-  // Use the Authenticated User Context
   const { setUser } = useContext(AuthenticatedUserContext);
 
   useEffect(() => {
@@ -48,10 +46,9 @@ const RootComponent = () => {
         setIsLoading(false);
       }
     );
-    return unsubscribeAuth; // Unsubscribe auth listener on unmount
+    return unsubscribeAuth; 
   }, [setUser]);
 
-  // Conditional rendering based on authentication state
   if (isLoading) {
     return (
       <SafeAreaView
@@ -79,6 +76,15 @@ const MainNavigator = () => {
 
 const Stack = createStackNavigator();
 
+const AppStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+    </Stack.Navigator>
+  );
+};
+
 
 
 const AuthStack = () => {
@@ -86,6 +92,7 @@ const AuthStack = () => {
     <Stack.Navigator>
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
+      <Stack.Screen name="Home"   component={Home} />
     </Stack.Navigator>
   );
 };
