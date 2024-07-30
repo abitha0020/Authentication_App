@@ -10,6 +10,7 @@ import { StatusBar } from "react-native";
 import Signup from './src/screens/signup';
 import Login from "./src/screens/login";
 import Home from './src/screens/home';
+import Profile from './src/screens/profile';
 import { Platform } from 'react-native';
 
 const AuthenticatedUserProvider = ({ children }) => {
@@ -79,8 +80,8 @@ const Stack = createStackNavigator();
 const AppStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Profile" component={Profile} />
     </Stack.Navigator>
   );
 };
