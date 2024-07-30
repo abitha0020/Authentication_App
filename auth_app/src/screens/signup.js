@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, database } from "../config/firebase";
 import profile from "../assets/favicon.png";
 import { Platform } from "react-native";
+import { doc, setDoc } from "firebase/firestore";
 
 const BACKGROUND_IMAGE_URL = Platform.OS==='web'?"https://picsum.photos/1000":"https://picsum.photos/600"
 
