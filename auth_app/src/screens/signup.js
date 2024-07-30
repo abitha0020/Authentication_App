@@ -12,7 +12,6 @@ export default function Signup({ navigation }) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [imageURL, setImageURL] = useState("");
 
     const onHandleSignup = async () => {
         try {
@@ -23,7 +22,6 @@ export default function Signup({ navigation }) {
             displayName: name,
             email: email,
             uid: user.uid,
-            photoURL: imageURL || profile,
             phoneNumber: "",
           });
         } catch (error) {
@@ -66,12 +64,6 @@ export default function Signup({ navigation }) {
               textContentType="password"
               value={password}
               onChangeText={(text) => setPassword(text)}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter image URL"
-              value={imageURL}
-              onChangeText={(text) => setImageURL(text)}
             />
             <TouchableOpacity style={styles.button} onPress={onHandleSignup}>
               <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>Sign Up</Text>
