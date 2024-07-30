@@ -21,8 +21,7 @@ export default function Login({ navigation }) {
       return (
         <View style={styles.container}>
           <ImageBackground source={{uri:BACKGROUND_IMAGE_URL}}style={styles.backImage} />
-          <View style={styles.whiteSheet} />
-          <Text style={styles.title}>Log In</Text>
+          <View  />
       
           <SafeAreaView style={styles.form}>
             <TextInput

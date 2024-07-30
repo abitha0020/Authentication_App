@@ -31,8 +31,7 @@ export default function Signup({ navigation }) {
       return (
         <View style={styles.container}>
           <ImageBackground source={{uri:BACKGROUND_IMAGE_URL}}style={styles.backImage} />
-          <View style={styles.whiteSheet} />
-          <Text style={styles.title}>Sign Up</Text>
+          <View />
           <SafeAreaView style={styles.form}>
             {/* Input Fields */}
             <TextInput
