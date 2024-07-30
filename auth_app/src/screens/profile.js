@@ -1,29 +1,14 @@
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { signOut } from 'firebase/auth';
-import React, { useContext } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  ScrollView,
-} from 'react-native';
-import { auth } from '../config/firebase';
-import { AuthenticatedUserContext } from '../contexts/index';
+import { auth, database } from '../config/firebase';
+import { AuthenticatedUserContext } from '../contexts';
+import { doc, getDoc } from 'firebase/firestore';
 
-export default function Profile({navigation}) {
+export default function Profile({ navigation }) {
   const { user } = useContext(AuthenticatedUserContext);
-
-  const getInitials = (name) => {
-    return name
-      ? name
-          .split(' ')
-          .map((word) => word[0])
-          .join('')
-          .substring(0, 2)
-          .toUpperCase()
-      : '';
-  };
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleLogout = () => {
     signOut(auth)
@@ -36,10 +21,35 @@ export default function Profile({navigation}) {
       });
   };
 
-  if (!user) {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (user) {
+        const userRef = doc(database, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+          setUserData(userDoc.data());
+          setLoading(false);
+        }
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+
+  if (loading) {
     return (
       <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
         <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>No user data found.</Text>
       </View>
     );
   }
@@ -47,19 +57,12 @@ export default function Profile({navigation}) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Profile</Text>
-      {user.photoURL ? (
-        <Image source={{ uri: user.photoURL }} style={styles.profileImage} />
-      ) : (
-        <View style={styles.initialsContainer}>
-          <Text style={styles.initialsText}>{getInitials(user.displayName)}</Text>
-        </View>
-      )}
       <View style={styles.userInfo}>
         <Text style={styles.label}>Name:</Text>
-        <Text style={styles.value}>{user.displayName}</Text>
+        <Text style={styles.value}>{userData.displayName}</Text>
 
         <Text style={styles.label}>Email:</Text>
-        <Text style={styles.value}>{user.email}</Text>
+        <Text style={styles.value}>{userData.email}</Text>
       </View>
       <TouchableOpacity style={styles.button} onPress={handleLogout}>
         <Text style={styles.buttonText}>Logout</Text>
