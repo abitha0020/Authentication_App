@@ -1,15 +1,15 @@
-import { signOut } from "firebase/auth";
-import React, { useContext } from "react";
+import { signOut } from 'firebase/auth';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   Image,
-} from "react-native";
-import { auth } from "../config/firebase";
-import { AuthenticatedUserContext } from "../contexts";
-
+  ScrollView,
+} from 'react-native';
+import { auth } from '../config/firebase';
+import { AuthenticatedUserContext } from '../contexts/index';
 
 export default function Profile({navigation}) {
   const { user } = useContext(AuthenticatedUserContext);
@@ -17,35 +17,41 @@ export default function Profile({navigation}) {
   const getInitials = (name) => {
     return name
       ? name
-          .split(" ")
+          .split(' ')
           .map((word) => word[0])
-          .join("")
+          .join('')
           .substring(0, 2)
           .toUpperCase()
-      : "";
+      : '';
   };
 
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        console.log("User logged out");
+        console.log('User logged out');
         navigation.navigate("Login");
       })
       .catch((error) => {
-        console.error("Error logging out: ", error);
+        console.error('Error logging out: ', error);
       });
   };
 
+  if (!user) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Profile</Text>
       {user.photoURL ? (
         <Image source={{ uri: user.photoURL }} style={styles.profileImage} />
       ) : (
         <View style={styles.initialsContainer}>
-          <Text style={styles.initialsText}>
-            {getInitials(user.displayName)}
-          </Text>
+          <Text style={styles.initialsText}>{getInitials(user.displayName)}</Text>
         </View>
       )}
       <View style={styles.userInfo}>
@@ -58,65 +64,90 @@ export default function Profile({navigation}) {
       <TouchableOpacity style={styles.button} onPress={handleLogout}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    padding: 20,
   },
   title: {
     fontSize: 32,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 40,
+    color: '#333',
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     marginBottom: 20,
   },
   initialsContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     marginBottom: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#ccc",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#888',
   },
   initialsText: {
     fontSize: 40,
-    color: "#fff",
+    color: '#fff',
   },
   userInfo: {
-    width: "80%",
+    width: '80%',
     marginBottom: 20,
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   label: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    color: '#555',
   },
   value: {
     fontSize: 18,
     marginBottom: 10,
+    color: '#777',
   },
   button: {
-    backgroundColor: "#E53935",
+    backgroundColor: '#E53935',
     padding: 15,
     borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 30,
-    width: "60%",
+    width: '60%',
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
     fontSize: 18,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  loadingText: {
+    fontSize: 20,
+    color: '#888',
   },
 });
