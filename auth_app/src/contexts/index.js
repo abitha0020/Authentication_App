@@ -20,7 +20,7 @@ export const AuthenticatedUserProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthenticatedUserContext.Provider value={{ user }}>
+    <AuthenticatedUserContext.Provider value={{ user, setUser }}>
       {children}
     </AuthenticatedUserContext.Provider>
   );
