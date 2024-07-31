@@ -1,47 +1,36 @@
-import React from "react";
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    StyleSheet
-  } from "react-native";
-  
-export default function Home({navigation}){
-    return (
-        <View style={styles.container}>
-          <Text style={styles.welcome}>Welcome to Home Screen</Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Profile")}
-          >
-            <Text style={styles.buttonText}>Go to Profile</Text>
-          </TouchableOpacity>
-        </View>
-      );
+import React from 'react';
+import { TouchableOpacity, StatusBar, Platform } from 'react-native';
+import { createBox, createText, ThemeProvider } from '@shopify/restyle';
+import theme from '../styles/theme'; // Make sure to adjust the path as necessary
+
+// Define Box and Text using restyle
+const Box = createBox();
+const Text = createText();
+
+export default function Home({ navigation }) {
+  return (
+    <ThemeProvider theme={theme}>
+      <Box flex={1} justifyContent="center" alignItems="center" backgroundColor="mainBackground">
+        <Text variant="header" mb="m">
+          Welcome to Home Screen
+        </Text>
+        <TouchableOpacity
+          style={[
+            {
+              backgroundColor: theme.colors.buttonbackground,
+              padding: theme.spacing.m,
+              borderRadius: 8,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: theme.spacing.m,
+            }
+          ]}
+          onPress={() => navigation.navigate("Profile")}
+        >
+          <Text variant="buttonText">Go to Profile</Text>
+        </TouchableOpacity>
+        <StatusBar barStyle="dark-content" />
+      </Box>
+    </ThemeProvider>
+  );
 }
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "#fff",
-    },
-    welcome: {
-      fontSize: 24,
-      fontWeight: "bold",
-      marginBottom: 20,
-    },
-    button: {
-      backgroundColor: "#f57c00",
-      padding: 15,
-      borderRadius: 8,
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: 10,
-    },
-    buttonText: {
-      color: "#fff",
-      fontWeight: "bold",
-      fontSize: 18,
-    },
-  });

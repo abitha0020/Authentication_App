@@ -1,9 +1,15 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity, ActivityIndicator, Image, ScrollView } from 'react-native';
 import { signOut } from 'firebase/auth';
 import { auth, database } from '../config/firebase';
 import { AuthenticatedUserContext } from '../contexts';
 import { doc, getDoc } from 'firebase/firestore';
+import { createBox, createText, ThemeProvider } from '@shopify/restyle';
+import theme from '../styles/theme'; // Adjust the path as necessary
+
+// Define Box and Text using restyle
+const Box = createBox();
+const Text = createText();
 
 export default function Profile({ navigation }) {
   const { user } = useContext(AuthenticatedUserContext);
@@ -28,7 +34,6 @@ export default function Profile({ navigation }) {
         const userDoc = await getDoc(userRef);
         if (userDoc.exists()) {
           setUserData(userDoc.data());
-          setLoading(false);
         }
         setLoading(false);
       }
@@ -39,118 +44,51 @@ export default function Profile({ navigation }) {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
+      <ThemeProvider theme={theme}>
+        <Box flex={1} justifyContent="center" alignItems="center" backgroundColor="mainBackground">
+          <ActivityIndicator size="large" color="primary" />
+          <Text variant="body" mt="m">Loading...</Text>
+        </Box>
+      </ThemeProvider>
     );
   }
 
   if (!userData) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>No user data found.</Text>
-      </View>
+      <ThemeProvider theme={theme}>
+        <Box flex={1} justifyContent="center" alignItems="center" backgroundColor="mainBackground">
+          <Text variant="body">No user data found.</Text>
+        </Box>
+      </ThemeProvider>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <View style={styles.userInfo}>
-        <Text style={styles.label}>Name:</Text>
-        <Text style={styles.value}>{userData.displayName}</Text>
-
-        <Text style={styles.label}>Email:</Text>
-        <Text style={styles.value}>{userData.email}</Text>
-      </View>
-      <TouchableOpacity style={styles.button} onPress={handleLogout}>
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    <ThemeProvider theme={theme}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.m }}>
+        <Text variant="header" mb="l">Profile</Text>
+        <Box width="80%" mb="m" backgroundColor="buttonText" padding="m" borderRadius={10} 
+          shadowColor="primaryText" shadowOffset={{ width: 0, height: 2 }} shadowOpacity={0.25} shadowRadius={4} elevation={5}>
+          <Text variant="body" fontWeight="bold" color="primaryText">Name:</Text>
+          <Text variant="body" color="primaryText" mb="s">{userData.displayName}</Text>
+          <Text variant="body" fontWeight="bold" color="primaryText">Email:</Text>
+          <Text variant="body" color="primaryText">{userData.email}</Text>
+        </Box>
+        <TouchableOpacity
+          style={{
+            backgroundColor: theme.colors.buttonbackground,
+            padding: theme.spacing.m,
+            borderRadius: 8,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: theme.spacing.l,
+            width: '60%',
+          }}
+          onPress={handleLogout}
+        >
+          <Text variant="buttonText">Logout</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 40,
-    color: '#333',
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 20,
-  },
-  initialsContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#888',
-  },
-  initialsText: {
-    fontSize: 40,
-    color: '#fff',
-  },
-  userInfo: {
-    width: '80%',
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#555',
-  },
-  value: {
-    fontSize: 18,
-    marginBottom: 10,
-    color: '#777',
-  },
-  button: {
-    backgroundColor: '#E53935',
-    padding: 15,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 30,
-    width: '60%',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  loadingText: {
-    fontSize: 20,
-    color: '#888',
-  },
-});
