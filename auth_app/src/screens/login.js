@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, Alert, ImageBackground, SafeAreaView, StatusBar } from 'react-native';
+import { Alert, TextInput, TouchableOpacity, SafeAreaView, StatusBar, Platform, StyleSheet, ImageBackground } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
-import { Platform } from 'react-native';
 import { ThemeProvider, createBox, createText } from '@shopify/restyle';
 import theme from '../styles/theme';
 
@@ -26,40 +25,44 @@ export default function Login({ navigation }) {
   return (
     <ThemeProvider theme={theme}>
       <Box flex={1}>
-        <ImageBackground source={{ uri: BACKGROUND_IMAGE_URL }} style={{ flex: 1 }} />
-        <SafeAreaView style={{ width: '80%', alignSelf: 'center' }}>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter email"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            autoFocus={true}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Enter password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-            textContentType="password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
-          <TouchableOpacity style={styles.button} onPress={onHandleLogin}>
-            <Text variant="buttonText">Log In</Text>
-          </TouchableOpacity>
-          <Box flexDirection="row" alignItems="center" alignSelf="center" mt="m">
-            <Text color="gray" fontWeight="600" fontSize={14}>
-              Don't have an account?{' '}
-            </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-              <Text color="buttonbackground">Sign Up</Text>
+        <ImageBackground 
+          source={{ uri: BACKGROUND_IMAGE_URL }} 
+          style={styles.backgroundImage}
+        >
+          <SafeAreaView style={styles.safeArea}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter email"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoFocus={true}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter password"
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={true}
+              textContentType="password"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+            />
+            <TouchableOpacity style={styles.button} onPress={onHandleLogin}>
+              <Text variant="buttonText">Log In</Text>
             </TouchableOpacity>
-          </Box>
-        </SafeAreaView>
+            <Box flexDirection="row" alignItems="center" alignSelf="center" mt="m">
+              <Text color="gray" fontWeight="600" fontSize={14}>
+                Don't have an account?{' '}
+              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+                <Text color="buttonbackground">Sign Up</Text>
+              </TouchableOpacity>
+            </Box>
+          </SafeAreaView>
+        </ImageBackground>
         <StatusBar barStyle="light-content" />
       </Box>
     </ThemeProvider>
@@ -67,6 +70,16 @@ export default function Login({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'center', 
+    alignItems: 'center', 
+  },
+  safeArea: {
+    width: '80%',
+    padding: 20,
+    borderRadius: 10,
+  },
   input: {
     backgroundColor: '#fff',
     padding: 15,
